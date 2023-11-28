@@ -5,8 +5,9 @@ import './index.css'
 
 const Layout = () => {
     return (
-        <div>
+        <div className='layout'>
             <nav className='navigation'>
+                <div className='logo' />
                 <ul>
                     <li>
                         <Link className='react-link' to="/">Home</Link>

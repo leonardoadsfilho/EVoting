@@ -1,13 +1,9 @@
-body{
-    padding: 0;
-    margin: 0;
-}
-
 .navigation{
+    width: 100%;
     display: flex;
     flex-direction: row;
-    width: 100%;
-    background-color: gainsboro;
+    align-items: center;
+    height: 80px;
 }
 
 li{
@@ -18,11 +14,21 @@ li{
 ul{
     display: flex;
     flex-direction: row;
+    margin-left: 40px;
 }
 
 .react-link{
     text-decoration: none;
-    color: green;
+    color: #1351b4;
     font-weight: bold;
     font-size: x-large;
+    text-transform: uppercase;
+}
+
+.logo{
+    background-image: url('../../images/urn_icon.png');
+    background-size: cover;
+    width: 100px;
+    height: 95px;
+    margin-left: 50px;
 }

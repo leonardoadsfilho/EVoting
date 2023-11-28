@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { ethers } from 'ethers'
+import WalletContext from '../../Context/Wallet';
 import './index.css'
 
 const Home = () => {
+
+    const { wallet } = useContext(WalletContext)
+
     return (
-        <div>
-            <h2>Home</h2>
+        <div className='home'>
+            <p>Address: {wallet.address}</p>
+            <p>Balance: {wallet.balance}</p>
         </div>
     );
 }
