@@ -1,16 +1,20 @@
-# Clone
+# EVoting
+This project aims at developing an election using blockchain technology.
 
-to run this rep, clone and "npm install" for install all the dependencies.
+## 🚀 Clone
 
-if wanna run the smart contract, use Remix IDE in browser and paste the "1_Election.sol" in the first example of 
+To run this rep, clone and "npm install" for install all the dependencies.
+
+If wanna run the smart contract, use Remix IDE in browser and paste the "1_Election.sol" in the first example of 
 smart contract. After, compile and publish the contract in some Ethereum Virtual Machine (EVM) for tests or publish
 in the public test network of Sepolia (Ethereum) using an Metamask Provider.
 
-# Getting Started with Create React App
+### 📋 Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+
+### 🔧 Available Scripts
 
 In the project directory, you can run:
 
