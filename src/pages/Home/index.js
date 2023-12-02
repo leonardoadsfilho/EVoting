@@ -8,9 +8,10 @@ const Home = () => {
     const { wallet } = useContext(WalletContext)
 
     return (
-        <div className='home'>
-            <p>Address: {wallet.address}</p>
-            <p>Balance: {wallet.balance}</p>
+        <div className='vote-page'>
+            <div className='vote-form'>
+
+            </div>
         </div>
     );
 }

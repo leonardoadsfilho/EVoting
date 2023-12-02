@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity >=0.8.2 <0.9.0;
+pragma solidity >0.8.2 <0.9.0;
 
 contract Election {
 
@@ -150,6 +150,7 @@ contract Election {
 
     function RegisterVoter(string memory cpf, uint8 age, string memory state, string memory city) external IsElectionStarted IsElectionClosed {
 
+        require(_manager != msg.sender, 'Gerente de eleicao nao pode se registrar');
         require(bytes(cpf).length > 0, 'CPF nao fornecido.');
         require(age > 0, 'Idade invalida.');
         require(bytes(state).length > 0, 'Estado nao fornecido');

@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ElectionContract from '../../config/abi'
 import { ethers } from 'ethers';
 import './index.css'
 
 const CandidateCard = (props) => {
 
+    const [colo, setColo] = useState(`#${Math.floor(Math.random()*16777215).toString(16)}`)
+
     const RegisterVote = async () => {
+
+        props.setWaitir(true)
+        
         try {    
             if (window.ethereum) {
                 window.ethereum
@@ -16,32 +21,32 @@ const CandidateCard = (props) => {
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const electionContract = new ethers.Contract(ElectionContract.ElectionContractAddress, ElectionContract.ElectionContractABI, signer)
-                const transaction = electionContract.Vote(props.cpf, props.candidate[4])
+                const transaction = await electionContract.Vote(props.cpf, props.candidate[4])
 
-                const response = await window.ethereum.request({
-                    method: 'eth_sendTransaction',
-                    params: [
-                      {
-                        to: transaction.to,
-                        gas: transaction.gasLimit.toHexString(),
-                        gasPrice: transaction.gasPrice.toHexString(),
-                        value: transaction.value.toHexString(),
-                        data: transaction.data,
-                      },
-                    ],
-                });
+                await transaction.wait()
 
             } else {
                 alert("install metamask extension!!");
             }
         } catch (error) {
-            console.error(error);
+            console.log(error);
+            props.setErroVote(error.error.message)
         }
-    }
 
+        props.setWaitir(false)
+    }
+    
     return (
-        <div className='CandidateCard' onClick={RegisterVote}>
-            {props.candidate[1]}
+        <div className='CandidateCard' onClick={RegisterVote} style={{backgroundColor: colo}}>
+            <div className='CandidateName'>
+                {props.candidate[1]}
+            </div>
+            <div className='CandidateInfo'>
+                {props.candidate[2]}
+            </div>
+            <div className='CandidateNumber'>
+                {props.candidate[4]}
+            </div>
         </div>
     )
 }

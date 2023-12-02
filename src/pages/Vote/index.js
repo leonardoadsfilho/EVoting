@@ -1,24 +1,47 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './index.css'
-import WalletContext from '../../Context/Wallet';
 import ElectionContract from '../../config/abi'
-import { ethers, utils } from 'ethers';
-import CandidateCard from '../../components/CandidateCard'
+import { ethers } from 'ethers';
+import { useNavigate } from 'react-router-dom';
+import ReactLoading from 'react-loading'
 
 const Vote = () => {
 
-    const { wallet } = useContext(WalletContext)
-    const [contract, setContract] = useState('')
-    const [electionName, setElectionName] = useState(null)
-    const [candidates, setCandidates] = useState([])
     const [cpf, setCpf] = useState('')
-    const [age, handleAgeChange] = useState('')
-    const [state, handleStateChange] = useState('')
-    const [city, handleCityChange] = useState('')
-    const [registered, setRegistered] = useState(false)
+    const [age, setAge] = useState('')
+    const [state, setState] = useState('')
+    const [city, setCity] = useState('')
     const [erro, setErro] = useState('')
+    const [waiti, setWaiti] = useState(false)
+
+    const nav = useNavigate()
 
     const handleClick = async () => {
+        if(!cpf || !age || !state || !city){
+            if(!cpf){
+                setErro('fill the cpf field')
+                return
+            }
+
+            if(!age){
+                setErro('fill the age field')
+                return
+            }
+
+            if(!state){
+                setErro('fill the state field')
+                return
+            }
+
+            if(!city){
+                setErro('fill the city field')
+                return
+            }
+            
+        }
+
+        setWaiti(true)
+
         try {    
             if (window.ethereum) {
                 // res[0] for fetching a first wallet
@@ -30,59 +53,58 @@ const Vote = () => {
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const electionContract = new ethers.Contract(ElectionContract.ElectionContractAddress, ElectionContract.ElectionContractABI, signer)
-                const electionNameResponse = await electionContract.election_name()
-                const candidatesResponse = await electionContract.GetCandidates()
+                const electionOpenResponse = await electionContract.votation_time();
+
+                if(electionOpenResponse.toNumber() > 0){
+                    throw {error: {message: 'Election is already open. Registration Disabled.'}}
+                }
+
+                const transaction = await electionContract.RegisterVoter(cpf, age, state, city)
+
+                await transaction.wait()
                 
-                setCandidates(candidatesResponse)
-                setElectionName(electionNameResponse)
-                const transaction = await electionContract.RegisterVoter('123', 123, 'MG', 'Belo-Horizonte')
-
-                const response = await window.ethereum.request({
-                    method: 'eth_sendTransaction',
-                    params: [
-                      {
-                        to: transaction.to,
-                        gas: transaction.gasLimit.toHexString(),
-                        gasPrice: transaction.gasPrice.toHexString(),
-                        value: transaction.value.toHexString(),
-                        data: transaction.data,
-                      },
-                    ],
-                });
-
-                setRegistered(true)
+                nav('/Results')
             } else {
                 alert("install metamask extension!!");
             }
         } catch (error) {
-            console.log(error.error.message);
-            setErro(error.error.message)
-        }      
-    }
-
-    useEffect(() => {
-        if(erro == 'execution reverted: Este endereco ja esta registrado.'){
-            setRegistered(true)
-        }
-    }, [erro])
-
-    const handleContractAddressChange = (event) => {
-        setContract(event.target.value)
+            console.log(error);
+            try {
+                setErro(error.error.message)   
+            } catch (er) {
+                setErro(`${er}`)
+            }
+        }    
+        
+        setWaiti(false)
     }
     
     const handleCPFChange = (event) => {
-        setCpf(event.target.value)
+        if(event.target.value){
+            setErro('')
+            setCpf(event.target.value)
+        }        
     }
 
-    const printCandidates = () => {
-        
-        let rows = []
-        for(let i in candidates){
-            rows.push(
-                <CandidateCard key={i} candidate={candidates[i]} cpf={cpf} />
-            )
-        }
-        return rows        
+    const handleAgeChange = (event) => {
+        if(event.target.value){
+            setErro('')
+            setAge(event.target.value)
+        }    
+    }
+
+    const handleStateChange = (event) => {
+        if(event.target.value){
+            setErro('')
+            setState(event.target.value)
+        }    
+    }
+
+    const handleCityChange = (event) => {
+        if(event.target.value){
+            setErro('')
+            setCity(event.target.value)
+        }    
     }
 
     return (
@@ -90,36 +112,26 @@ const Vote = () => {
             <div className='vote-form'>
                 <h2>Register</h2>
                 <div className='input'>
-                    Contract Address <input type='text' onChange={handleContractAddressChange} value={contract}/>
-                </div>
-                <div className='input'>
                     CPF <input type='text' onChange={handleCPFChange} value={cpf}/>
                 </div>
                 <div className='input'>
-                    Age <input type='text' onChange={() => handleAgeChange()} value={age}/>
+                    Age <input type='text' onChange={handleAgeChange} value={age}/>
                 </div>
                 <div className='input'>
-                    State <input type='text' onChange={() => handleStateChange()} value={state}/>
+                    State <input type='text' onChange={handleStateChange} value={state}/>
                 </div>
                 <div className='input'>
-                    City <input type='text' onChange={() => handleCityChange()} value={city}/>
+                    City <input type='text' onChange={handleCityChange} value={city}/>
                 </div>
-                {erro}
+                <div className='vote-erro'>
+                    {erro}
+                </div>
                 <div className='input input-center'>
                     <div type='button' className='vote-button' onClick={handleClick}>
-                        Register
+                        {waiti ? <ReactLoading type='spin' color={'#FAFAFA'} height={30} width={30}></ReactLoading> : 'Register'}
                     </div>
                 </div>
             </div>
-            {
-                electionName &&
-                <div className='vote-form'>
-                    Election Name: {electionName}
-                    {
-                        registered ? printCandidates() : ''
-                    }
-                </div>
-            }            
         </div>
     );
 }
