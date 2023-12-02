@@ -458,7 +458,6 @@ const ElectionContractABI = [
 ]
 
 const ElectionContractAddress = '0x582d80897CDA4e8342323b86448DAF75e5F82AAB'
-const WalletPrivateKey = '0xe3524cc2274fddd4da0a9911f36bad0a518ca6e1f1e706f57442163c7221b401'
 
 const ElectionContract = { 
 	ElectionContractABI, 
