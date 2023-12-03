@@ -44,6 +44,9 @@ const CandidateCard = (props) => {
             <div className='CandidateInfo'>
                 {props.candidate[2]}
             </div>
+            <div className='CandidateInfo'>
+                {props.candidate[5]}
+            </div>
             <div className='CandidateNumber'>
                 {props.candidate[4]}
             </div>

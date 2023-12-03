@@ -64,6 +64,7 @@ const Results = () => {
         
         let rows = []
         for(let i in candidates){
+            console.log(i);
             rows.push(
                 <CandidateCard key={i} candidate={candidates[i]} cpf={cpf} setErroVote={setErroV} setWaitir={setWaiti}/>
             )

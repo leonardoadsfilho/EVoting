@@ -87,6 +87,12 @@ const Vote = () => {
     }
 
     const handleAgeChange = (event) => {
+
+        if(parseInt(event.target.value) > 150){
+            setErro('Age limit')
+            setAge('150')
+            return
+        }
         if(event.target.value){
             setErro('')
             setAge(event.target.value)
@@ -115,7 +121,7 @@ const Vote = () => {
                     CPF <input type='text' onChange={handleCPFChange} value={cpf}/>
                 </div>
                 <div className='input'>
-                    Age <input type='text' onChange={handleAgeChange} value={age}/>
+                    Age <input type='number' onChange={handleAgeChange} value={age} max='150'/>
                 </div>
                 <div className='input'>
                     State <input type='text' onChange={handleStateChange} value={state}/>

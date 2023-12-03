@@ -1,4 +1,4 @@
-.CandidateCard{
+.CandidateCardR{
     display: flex;
     padding: 5px;
     border-style: solid;
@@ -6,17 +6,12 @@
     border-radius: 5px;
     margin: 5px;
     width: 270px;
-    height: 180px;
+    height: 200px;
     color: aliceblue;
-    cursor: pointer;
     justify-content: center;
     flex-direction: column;
     align-items: center;
-}
-
-.CandidateCard:hover{
     border-color: rgb(0, 73, 209);
-    background-color: rgb(0, 73, 209);
 }
 
 .CandidateName{
